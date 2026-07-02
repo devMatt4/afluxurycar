@@ -1,0 +1,95 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum VehicleCategory {
+  nuovo
+  usato
+}
+
+enum VehicleFuel {
+  benzina
+  diesel
+  ibrida
+  elettrica
+  gpl
+  metano
+}
+
+enum VehicleTransmission {
+  manuale
+  automatico
+}
+
+model Vehicle {
+  id             String                @id @default(cuid())
+  slug           String                @unique
+  title          String
+  brand          String
+  model          String
+  version        String?
+  category       VehicleCategory
+  price          Int
+  year           Int
+  mileage        Int
+  fuel           VehicleFuel
+  transmission   VehicleTransmission
+  power          String?
+  engine         String?
+  color          String?
+  doors          Int?
+  seats          Int?
+  location       String
+  description    String
+  features       String[]
+  sellerName     String
+  sellerPhone    String
+  sellerEmail    String?
+  isFeatured     Boolean               @default(false)
+  isPublished    Boolean               @default(true)
+  images         VehicleImage[]
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+}
+
+model VehicleImage {
+  id         String    @id @default(cuid())
+  url        String
+  alt        String?
+  order      Int       @default(0)
+
+  vehicleId  String
+  vehicle    Vehicle   @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  createdAt  DateTime  @default(now())
+
+  @@index([vehicleId])
+}
+
+model SiteSettings {
+  id               String   @id @default(cuid())
+
+  siteName         String   @default("AFLUXURYCAR")
+
+  phonePrimary     String
+  phoneSecondary   String?
+
+  whatsapp         String?
+
+  email            String
+
+  instagram        String?
+  facebook         String?
+  tiktok           String?
+
+  address          String?
+  city             String?
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
